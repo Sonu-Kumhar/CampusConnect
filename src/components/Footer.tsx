@@ -79,7 +79,7 @@ const Footer = () => {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Main footer content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand section */}
           <div className="lg:col-span-2">
             <motion.div 
@@ -207,113 +207,10 @@ const Footer = () => {
           </motion.div>
         </div>
 
-        {/* Contact and social links */}
-        <div className="border-t border-gray-200 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6 mb-6 md:mb-0"
-            >
-              <div className="flex items-center text-gray-600">
-                <Mail className="h-4 w-4 mr-2 text-blue-500" />
-                <span>clubs@campus.edu</span>
-              </div>
-              <div className="flex items-center text-gray-600">
-                <Phone className="h-4 w-4 mr-2 text-green-500" />
-                <span>(555) 123-STUDENT</span>
-              </div>
-              <div className="flex items-center text-gray-600">
-                <MapPin className="h-4 w-4 mr-2 text-red-500" />
-                <span>Student Union Building, Room 205</span>
-              </div>
-            </motion.div>
+        
 
-            <motion.div 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex space-x-3"
-            >
-              {socialLinks.map((social, index) => (
-                <motion.a
-                  key={index}
-                  href={social.href}
-                  aria-label={social.label}
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`h-9 w-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 ${social.color} transition-all duration-300 border border-gray-200`}
-                >
-                  <social.icon className="h-4 w-4" />
-                </motion.a>
-              ))}
-            </motion.div>
-          </div>
-        </div>
+        
 
-        {/* Campus links */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="border-t border-gray-200 pt-6 mt-6"
-        >
-          <div className="flex flex-wrap justify-center gap-6">
-            {footerLinks.campus.map((link, index) => (
-              <a 
-                key={index}
-                href={link.href} 
-                className="text-sm text-gray-500 hover:text-blue-600 transition-colors"
-              >
-                {link.name}
-              </a>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Bottom section */}
-        <div className="border-t border-gray-200 pt-8 mt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <motion.p 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="text-gray-500 text-sm mb-4 md:mb-0"
-            >
-              © {new Date().getFullYear()} CampusConnect • University of Campusville
-            </motion.p>
-            
-            <motion.div 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.7 }}
-              className="flex space-x-6"
-            >
-              <a href="#" className="text-gray-500 hover:text-blue-600 text-sm transition-colors">
-                Privacy
-              </a>
-              <a href="#" className="text-gray-500 hover:text-blue-600 text-sm transition-colors">
-                Terms
-              </a>
-              <a href="#" className="text-gray-500 hover:text-blue-600 text-sm transition-colors">
-                Accessibility
-              </a>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Made with love */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-center mt-8 pt-4 border-t border-gray-200"
-        >
-          <p className="text-gray-500 text-sm flex items-center justify-center">
-            Made with <Heart className="h-4 w-4 mx-1 text-red-500 fill-current" /> for students
-          </p>
-        </motion.div>
       </div>
     </footer>
   );
