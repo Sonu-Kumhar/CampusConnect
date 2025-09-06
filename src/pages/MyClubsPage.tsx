@@ -3,71 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Heart, Users, MapPin, Calendar, Tag, MessageSquare, Bell, Settings, Award, Star } from "lucide-react";
-
-// 3D Card Components (since you don't have them in components/ui)
-const CardContainer = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => {
-  return (
-    <div className={`group/card ${className}`}>
-      {children}
-    </div>
-  );
-};
-
-const CardBody = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => {
-  return (
-    <div className={`relative ${className}`}>
-      {children}
-    </div>
-  );
-};
-
-const CardItem = ({
-  as: Tag = "div",
-  className,
-  children,
-  translateX = 0,
-  translateY = 0,
-  translateZ = 0,
-  rotateX = 0,
-  rotateY = 0,
-  rotateZ = 0,
-  ...rest
-}: {
-  as?: any;
-  className?: string;
-  children: React.ReactNode;
-  translateX?: number | string;
-  translateY?: number | string;
-  translateZ?: number | string;
-  rotateX?: number | string;
-  rotateY?: number | string;
-  rotateZ?: number | string;
-  [key: string]: any;
-}) => {
-  return (
-    <Tag
-      className={className}
-      style={{
-        transform: `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`,
-      }}
-      {...rest}
-    >
-      {children}
-    </Tag>
-  );
-};
+import { CardBody, CardContainer, CardItem } from "../components/ui/3d-card";
 
 // Animation variants
 const containerVariants = {
@@ -161,16 +97,16 @@ const myClubs = [
 ];
 
 // ClubCard Component for My Clubs
-const ClubCard = ({ 
-  id, 
-  name, 
-  description, 
-  category, 
-  memberCount, 
-  location, 
-  nextEvent, 
-  tags, 
-  isFavorited, 
+const ClubCard = ({
+  id,
+  name,
+  description,
+  category,
+  memberCount,
+  location,
+  nextEvent,
+  tags,
+  isFavorited,
   image,
   role,
   joinedDate,
@@ -184,11 +120,13 @@ const ClubCard = ({
   const toggleFavorite = (e: any) => {
     e.stopPropagation();
     setFavorited(!favorited);
+    // TODO: sync with backend
   };
 
   const toggleNotifications = (e: any) => {
     e.stopPropagation();
     setNotificationsEnabled(!notificationsEnabled);
+    // TODO: persist preference
   };
 
   // Format joined date
@@ -203,15 +141,15 @@ const ClubCard = ({
       <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-full h-full rounded-xl p-6 border">
         {/* Role Badge */}
         <CardItem translateZ="30" className={`inline-block px-3 py-1 text-xs font-medium rounded-full mb-4 ${
-          role === "Admin" 
-            ? "bg-red-100 text-red-800" 
-            : role === "Core Member" 
-            ? "bg-purple-100 text-purple-800" 
+          role === "Admin"
+            ? "bg-red-100 text-red-800"
+            : role === "Core Member"
+            ? "bg-purple-100 text-purple-800"
             : "bg-blue-100 text-blue-800"
         }`}>
           {role}
         </CardItem>
-        
+
         {/* Club Name */}
         <CardItem
           translateZ="50"
@@ -219,7 +157,7 @@ const ClubCard = ({
         >
           {name}
         </CardItem>
-        
+
         {/* Description */}
         <CardItem
           as="p"
@@ -228,12 +166,12 @@ const ClubCard = ({
         >
           {description}
         </CardItem>
-        
+
         {/* Image */}
-        <CardItem 
-          translateZ="100" 
-          rotateX={5} 
-          rotateZ={-2} 
+        <CardItem
+          translateZ="100"
+          rotateX={5}
+          rotateZ={-2}
           className="w-full mt-4"
         >
           <motion.div
@@ -252,7 +190,7 @@ const ClubCard = ({
             </div>
           </motion.div>
         </CardItem>
-        
+
         {/* Club Stats */}
         <div className="mt-6 grid grid-cols-2 gap-4">
           <CardItem translateZ="30" className="flex flex-col items-center p-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
@@ -260,32 +198,32 @@ const ClubCard = ({
             <span className="text-xs text-neutral-600 dark:text-neutral-400">Members</span>
             <span className="font-bold text-sm">{memberCount}</span>
           </CardItem>
-          
+
           <CardItem translateZ="30" className="flex flex-col items-center p-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
             <Calendar className="h-5 w-5 text-green-600 mb-1" />
             <span className="text-xs text-neutral-600 dark:text-neutral-400">Events</span>
             <span className="font-bold text-sm">{eventsThisWeek} this week</span>
           </CardItem>
         </div>
-        
+
         {/* Club Details */}
         <div className="mt-4 space-y-2">
           <CardItem translateZ="30" className="flex items-center text-sm text-neutral-600 dark:text-neutral-400">
             <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
             <span className="truncate">{location}</span>
           </CardItem>
-          
+
           <CardItem translateZ="30" className="flex items-center text-sm text-neutral-600 dark:text-neutral-400">
             <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
             <span className="truncate">{nextEvent}</span>
           </CardItem>
-          
+
           <CardItem translateZ="30" className="flex items-center text-sm text-neutral-600 dark:text-neutral-400">
             <MessageSquare className="h-4 w-4 mr-2 flex-shrink-0" />
             <span>{announcements} new announcements</span>
           </CardItem>
         </div>
-        
+
         {/* Achievements */}
         {achievements.length > 0 && (
           <CardItem translateZ="40" className="mt-4">
@@ -295,7 +233,7 @@ const ClubCard = ({
             </div>
             <div className="flex flex-wrap gap-2">
               {achievements.map((achievement: string, index: number) => (
-                <span 
+                <span
                   key={index}
                   className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400"
                 >
@@ -306,7 +244,7 @@ const ClubCard = ({
             </div>
           </CardItem>
         )}
-        
+
         {/* Action Buttons */}
         <div className="flex justify-between items-center mt-6">
           <div className="flex space-x-2">
@@ -318,7 +256,7 @@ const ClubCard = ({
             >
               <Bell className={`h-4 w-4 ${notificationsEnabled ? 'text-blue-600' : ''}`} />
             </CardItem>
-            
+
             <CardItem
               translateZ={30}
               as="button"
@@ -327,7 +265,7 @@ const ClubCard = ({
               <Settings className="h-4 w-4" />
             </CardItem>
           </div>
-          
+
           <CardItem
             translateZ={30}
             as="button"
@@ -336,7 +274,7 @@ const ClubCard = ({
             View Club
           </CardItem>
         </div>
-        
+
         {/* Favorite Button */}
         <CardItem translateZ="50" className="absolute top-4 right-4">
           <button
@@ -354,7 +292,7 @@ const ClubCard = ({
 // Filter component for My Clubs
 const MyClubsFilters = () => {
   const [activeFilter, setActiveFilter] = useState('all');
-  
+
   const filters = [
     { id: 'all', label: 'All Clubs' },
     { id: 'admin', label: 'I Manage' },
@@ -395,7 +333,7 @@ const MyClubsStats = () => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
       {stats.map((stat, index) => (
-        <motion.div 
+        <motion.div
           key={index}
           className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700"
           initial={{ opacity: 0, y: 20 }}
@@ -418,7 +356,7 @@ export const MyClubsPage = () => {
   }, []);
 
   return (
-    <motion.section 
+    <motion.section
       className="min-h-screen bg-gray-50 dark:bg-gray-900"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -426,7 +364,7 @@ export const MyClubsPage = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-16">
         {/* Header */}
-        <motion.div 
+        <motion.div
           className="mb-8"
           variants={headerVariants}
           initial="hidden"
@@ -435,7 +373,7 @@ export const MyClubsPage = () => {
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             My Clubs
           </h2>
-          <motion.p 
+          <motion.p
             className="text-gray-600 dark:text-gray-400 text-lg"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -449,7 +387,7 @@ export const MyClubsPage = () => {
         <MyClubsStats />
 
         {/* Filters */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}
@@ -458,7 +396,7 @@ export const MyClubsPage = () => {
         </motion.div>
 
         {/* Results Summary */}
-        <motion.div 
+        <motion.div
           className="mb-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -470,7 +408,7 @@ export const MyClubsPage = () => {
         </motion.div>
 
         {/* Clubs Grid */}
-        <motion.div 
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           variants={containerVariants}
           initial="hidden"
@@ -485,7 +423,7 @@ export const MyClubsPage = () => {
                 animate="visible"
                 exit={{ opacity: 0, y: 20 }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ 
+                whileHover={{
                   y: -5,
                   transition: { duration: 0.2 }
                 }}
@@ -499,7 +437,7 @@ export const MyClubsPage = () => {
 
         {/* Empty State (if no clubs) */}
         {myClubs.length === 0 && (
-          <motion.div 
+          <motion.div
             className="text-center py-12"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -508,9 +446,9 @@ export const MyClubsPage = () => {
             <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 max-w-md mx-auto">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">You haven't joined any clubs yet</h3>
               <p className="text-gray-600 dark:text-gray-400 mb-4">Discover and join clubs that match your interests</p>
-              <motion.button 
+              <motion.button
                 className="px-6 py-3 rounded-xl bg-blue-600 dark:bg-blue-500 text-white font-medium hover:bg-blue-700 transition-colors"
-                whileHover={{ 
+                whileHover={{
                   scale: 1.05,
                   transition: { duration: 0.2 }
                 }}
@@ -527,3 +465,4 @@ export const MyClubsPage = () => {
 };
 
 export default MyClubsPage;
+

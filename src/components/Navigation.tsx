@@ -24,7 +24,7 @@ export const Navigation = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="text-xl font-extrabold bg-gradient-hero bg-clip-text text-transparent tracking-wide hover:scale-105 transition-transform">
+            <div className="text-2xl font-extrabold bg-gradient-hero bg-clip-text text-transparent tracking-wide hover:scale-105 transition-transform">
               CampusConnect
             </div>
           </motion.div>

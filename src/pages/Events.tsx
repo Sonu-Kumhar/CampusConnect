@@ -1,74 +1,12 @@
+"use client";
+
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Heart, Users, MapPin, Calendar, Tag, Clock, ArrowRight, Ticket } from "lucide-react";
-import { cn } from "@/lib/utils"; // You might need to install clsx or class-variance-authority
+import { CardBody, CardContainer, CardItem } from "../components/ui/3d-card";
+import { cn } from "@/lib/utils";
 
-// 3D Card Components (since you don't have them in your components/ui)
-export const CardContainer = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => {
-  return (
-    <div className={cn("group/card", className)}>
-      {children}
-    </div>
-  );
-};
-
-export const CardBody = ({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) => {
-  return (
-    <div className={cn("relative", className)}>
-      {children}
-    </div>
-  );
-};
-
-export const CardItem = ({
-  as: Tag = "div",
-  className,
-  children,
-  translateX = 0,
-  translateY = 0,
-  translateZ = 0,
-  rotateX = 0,
-  rotateY = 0,
-  rotateZ = 0,
-  ...rest
-}: {
-  as?: any;
-  className?: string;
-  children: React.ReactNode;
-  translateX?: number | string;
-  translateY?: number | string;
-  translateZ?: number | string;
-  rotateX?: number | string;
-  rotateY?: number | string;
-  rotateZ?: number | string;
-  [key: string]: any;
-}) => {
-  return (
-    <Tag
-      className={cn("", className)}
-      style={{
-        transform: `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`,
-      }}
-      {...rest}
-    >
-      {children}
-    </Tag>
-  );
-};
-
-// Animation variants (same as clubs page for consistency)
+// Animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
@@ -181,7 +119,7 @@ const mockEvents = [
     attendees: 180,
     capacity: 250,
     category: "Competition",
-    tags: ["Startups", "Business", "Networking", "Innovation"],
+    tags: ["Startups", "Business", "Networking"],
     isFavorited: false,
     image: "https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     price: "Free"
@@ -197,7 +135,7 @@ const mockEvents = [
     attendees: 95,
     capacity: 128,
     category: "Tournament",
-    tags: ["Gaming", "Esports", "Competition", "League of Legends"],
+    tags: ["Gaming", "Esports", "Competition"],
     isFavorited: false,
     image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     price: "$5 per player"
@@ -336,7 +274,8 @@ const EventCard = ({
           <CardItem translateZ="30" className="pt-2">
             <div className="flex justify-between text-xs text-neutral-600 dark:text-neutral-400 mb-1">
               <span><Users className="h-3 w-3 inline mr-1" /> {attendees}/{capacity}</span>
-              <span>{Math.round(attendancePercentage)}% full</span>
+             <span className="ml-2 text-yellow-500">{Math.round(attendancePercentage)}% full</span>
+
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
               <div 
@@ -535,10 +474,5 @@ export const EventsPage = () => {
     </motion.section>
   );
 };
-
-// Simple utility function for classNames if you don't have cn
-function cn(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
 
 export default EventsPage;

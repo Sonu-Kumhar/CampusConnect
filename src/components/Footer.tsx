@@ -205,6 +205,8 @@ const Footer = () => {
               </motion.div>
             )}
           </motion.div>
+
+          
         </div>
 
         
@@ -212,6 +214,10 @@ const Footer = () => {
         
 
       </div>
+
+      <div className="mb-4 border-t border-gray-200 pt-4 text-center text-gray-500 text-sm">
+  © {new Date().getFullYear()} CampusConnect. All rights reserved. Developed by <span className="font-semibold text-gray-700">The Shield</span>.
+</div>
     </footer>
   );
 };
