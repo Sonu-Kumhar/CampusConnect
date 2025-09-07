@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Users, Calendar, Trophy, ChevronDown } from "lucide-react";
 import heroImage from "@/assets/hero-campus.jpg";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 // Animation variants
@@ -48,9 +48,74 @@ const pulseGlow = {
   }
 };
 
+// Counter component for animated numbers
+const Counter = ({ value, suffix = "+" }) => {
+  const [count, setCount] = useState(0);
+  const targetValue = parseInt(value.replace(/,/g, '').replace('+', ''));
+
+  useEffect(() => {
+    let start = 0;
+    const duration = 3000; // 3 seconds
+    const increment = targetValue / (duration / 20); // Calculate increment per frame
+    
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= targetValue) {
+        setCount(targetValue);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(start));
+      }
+    }, 20);
+
+    return () => clearInterval(timer);
+  }, [targetValue]);
+
+  return (
+    <>{count.toLocaleString()}{suffix}</>
+  );
+};
+
 export const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
+  const backgroundRef = useRef(null);
+
+  // Mouse tracking for parallax effect
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Smooth spring animations for the mouse movement
+  const springConfig = { stiffness: 300, damping: 30 };
+  const x = useSpring(mouseX, springConfig);
+  const y = useSpring(mouseY, springConfig);
+
+  // Transform mouse position to background movement (reduced intensity)
+  const backgroundX = useTransform(x, [-1, 1], [-30, 30]);
+  const backgroundY = useTransform(y, [-1, 1], [-20, 20]);
+  const backgroundScale = useTransform(y, [-1, 1], [1.05, 1.15]);
+
+  // Handle mouse movement
+  const handleMouseMove = (event) => {
+    if (!sectionRef.current) return;
+
+    const rect = sectionRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    // Normalize mouse position to -1 to 1 range
+    const normalizedX = (event.clientX - centerX) / (rect.width / 2);
+    const normalizedY = (event.clientY - centerY) / (rect.height / 2);
+    
+    mouseX.set(Math.max(-1, Math.min(1, normalizedX)));
+    mouseY.set(Math.max(-1, Math.min(1, normalizedY)));
+  };
+
+  // Reset position when mouse leaves
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
 
   useEffect(() => {
     setIsVisible(true);
@@ -79,21 +144,29 @@ export const Hero = () => {
   return (
     <section 
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden" 
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
-      {/* Enhanced Background with Parallax Effect */}
+      {/* Enhanced Background with Mouse Parallax Effect */}
       <motion.div 
-        className="absolute inset-0 z-0"
+        ref={backgroundRef}
+        className="absolute inset-0 z-0 will-change-transform"
         initial={{ scale: 1.2 }}
         animate={{ scale: 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
+        style={{
+          x: backgroundX,
+          y: backgroundY,
+          scale: backgroundScale,
+        }}
       >
         <motion.img
           src={heroImage}
           alt="Campus community scene"
           className="w-full h-full object-cover"
           animate={{
-            scale: [1, 1.05, 1]
+            scale: [1, 1.02, 1]
           }}
           transition={{
             duration: 20,
@@ -122,7 +195,7 @@ export const Hero = () => {
         }}
       />
 
-      {/* Content */}
+      {/* Content - Static positioning */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div 
           variants={staggerContainer}
@@ -135,7 +208,7 @@ export const Hero = () => {
           >
             Discover Your
             <motion.span 
-              className="block bg-gradient-accent bg-clip-text text-transparent pb-4"
+              className="block bg-gradient-accent bg-clip-text text-transparent"
               initial={{ backgroundPosition: "0% 0%" }}
               animate={{ backgroundPosition: "100% 100%" }}
               transition={{
@@ -196,9 +269,9 @@ export const Hero = () => {
             className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto"
           >
             {[
-              { icon: Users, value: "150+", label: "Active Clubs" },
-              { icon: Calendar, value: "500+", label: "Monthly Events" },
-              { icon: Trophy, value: "2,500+", label: "Active Members" }
+              { icon: Users, value: "150", label: "Active Clubs" },
+              { icon: Calendar, value: "500", label: "Monthly Events" },
+              { icon: Trophy, value: "2500", label: "Active Members" }
             ].map((stat, index) => (
               <motion.div
                 key={index}
@@ -235,7 +308,7 @@ export const Hero = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: index * 0.2 + 0.8, duration: 0.5 }}
                   >
-                    {stat.value}
+                    <Counter value={stat.value} />
                   </motion.div>
                   <div className="text-white/80">{stat.label}</div>
                 </div>
@@ -245,7 +318,7 @@ export const Hero = () => {
         </motion.div>
       </div>
 
-      {/* Enhanced Floating Elements with trails */}
+      {/* Enhanced Floating Elements with trails - with subtle parallax */}
       {[
         { top: "20%", left: "10%", size: "w-20 h-20", color: "bg-accent/20", delay: 0 },
         { top: "70%", left: "85%", size: "w-16 h-16", color: "bg-primary-glow/20", delay: 1 },
@@ -256,7 +329,12 @@ export const Hero = () => {
         <motion.div
           key={index}
           className={`absolute ${element.size} ${element.color} rounded-full`}
-          style={{ top: element.top, left: element.left }}
+          style={{ 
+            top: element.top, 
+            left: element.left,
+            x: useTransform(x, [-1, 1], [-5, 5]),
+            y: useTransform(y, [-1, 1], [-3, 3]),
+          }}
           animate={{
             y: [0, -40, 0],
             x: [0, 15, 0],
@@ -287,7 +365,7 @@ export const Hero = () => {
         </motion.div>
       </motion.div>
 
-      {/* Particle animation effect */}
+      {/* Particle animation effect - with subtle parallax */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {Array.from({ length: 15 }).map((_, i) => (
           <motion.div
@@ -296,6 +374,8 @@ export const Hero = () => {
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
+              x: useTransform(x, [-1, 1], [-2, 2]),
+              y: useTransform(y, [-1, 1], [-1, 1]),
             }}
             animate={{
               y: [0, -20, -40, -60, -80],
@@ -311,6 +391,21 @@ export const Hero = () => {
           />
         ))}
       </div>
+
+      {/* Custom cursor for better UX */}
+      <motion.div
+        className="fixed top-0 left-0 w-6 h-6 bg-white/20 rounded-full pointer-events-none z-50 mix-blend-difference"
+        style={{
+          x: useTransform(mouseX, [-1, 1], [-12, 12]),
+          y: useTransform(mouseY, [-1, 1], [-12, 12]),
+        }}
+        animate={{
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+        }}
+      />
     </section>
   );
 };
