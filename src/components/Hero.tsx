@@ -208,7 +208,7 @@ export const Hero = () => {
           >
             Discover Your
             <motion.span 
-              className="block bg-gradient-accent bg-clip-text text-transparent"
+              className="block bg-gradient-accent bg-clip-text text-transparent pb-4"
               initial={{ backgroundPosition: "0% 0%" }}
               animate={{ backgroundPosition: "100% 100%" }}
               transition={{
